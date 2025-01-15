@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Enables discovery of services via Eureka
+      routes:
+        - id: order-service
+          uri: lb://order-processing-service  # 'lb://' tells the gateway to use load balancing via Eureka
+          predicates:
+            - Path=/api/orders/**  # Routes /api/orders/* to order-service
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/**  # Routes /api/payments/* to payment-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
